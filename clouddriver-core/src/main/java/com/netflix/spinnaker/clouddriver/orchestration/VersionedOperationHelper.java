@@ -17,17 +17,14 @@
 
 package com.netflix.spinnaker.clouddriver.orchestration;
 
-import com.netflix.spinnaker.kork.annotations.NonnullByDefault;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
+// TODO Remove
 
-@NonnullByDefault
-public class VersionedOperationHelper {
-  static <T extends VersionedCloudProviderOperation> List<T> findVersionMatches(
-      @Nullable String version, List<T> converters) {
-    return converters.stream()
-        .filter(it -> it.acceptsVersion(version))
-        .collect(Collectors.toList());
-  }
-}
+// @NonnullByDefault
+// public class VersionedOperationHelper {
+//  static <T extends VersionedCloudProviderOperation> List<T> findVersionMatches(
+//      @Nullable String version, List<T> converters) {
+//    return converters.stream()
+//        .filter(it -> it.acceptsVersion(version))
+//        .collect(Collectors.toList());
+//  }
+// }
