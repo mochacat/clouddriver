@@ -29,7 +29,7 @@ public interface AtomicOperationsRegistry {
    * @param cloudProvider
    * @return
    */
-  public abstract AtomicOperationConverter getAtomicOperationConverter(
+  AtomicOperationConverter getAtomicOperationConverter(
       String description, String cloudProvider);
 
   /**
@@ -38,6 +38,6 @@ public interface AtomicOperationsRegistry {
    * @return
    */
   @Nullable
-  public abstract DescriptionValidator getAtomicOperationDescriptionValidator(
+  DescriptionValidator getAtomicOperationDescriptionValidator(
       String validator, String cloudProvider);
 }
