@@ -37,7 +37,8 @@ public class ApplicationContextAtomicOperationsRegistry implements AtomicOperati
   // getAtomicOperationConverter for some reason...
   // maybe because I literally copied groovy into a java file :thinking-face
   @Override
-  public AtomicOperationConverter getAtomicOperationConverter(String description, String cloudProvider) {
+  public AtomicOperationConverter getAtomicOperationConverter(
+      String description, String cloudProvider) {
     return (AtomicOperationConverter) applicationContext.getBean(description);
   }
 
@@ -47,7 +48,7 @@ public class ApplicationContextAtomicOperationsRegistry implements AtomicOperati
   // maybe because I literally copied groovy into a java file :thinking-face
   @Override
   public DescriptionValidator getAtomicOperationDescriptionValidator(
-    String validator, String cloudProvider) {
+      String validator, String cloudProvider) {
     return (DescriptionValidator) applicationContext.getBean(validator);
   }
 }

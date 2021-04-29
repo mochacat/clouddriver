@@ -6,6 +6,8 @@ import com.netflix.spinnaker.clouddriver.deploy.DescriptionValidator;
 import com.netflix.spinnaker.kork.exceptions.UserException;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,19 +17,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 // Doesn't seem like logger is being used so removing it
 // @Slf4j
 public class AnnotationsBasedAtomicOperationsRegistry
-  extends ApplicationContextAtomicOperationsRegistry {
+    extends ApplicationContextAtomicOperationsRegistry {
 
   @Autowired List<CloudProvider> cloudProviders;
 
   // definitely need tests for this method. I had to convert some groovy things to java ehh
   @Override
   public AtomicOperationConverter getAtomicOperationConverter(
-    String description, String cloudProvider) {
+      String description, String cloudProvider) {
     // Legacy naming convention which is not generic and description name is specific to cloud
     // provider
     try {
       AtomicOperationConverter converter =
-        super.getAtomicOperationConverter(description, cloudProvider);
+          super.getAtomicOperationConverter(description, cloudProvider);
       if (converter != null) {
         return converter;
       }
@@ -52,34 +54,46 @@ public class AnnotationsBasedAtomicOperationsRegistry
     Class<? extends Annotation> providerAnnotationType = getCloudProviderAnnotation(cloudProvider);
 
     // is this equivalent to Groovy's findAll?
+    Map<String, Object> beans = applicationContext.getBeansWithAnnotation(providerAnnotationType);
+    Set<Map.Entry<String, Object>> entrySet = beans.entrySet();
+    Object[] arr = entrySet.toArray();
+    Object obj = arr[0];
+    //    VersionedDescription converterVersion =
+    //      VersionedDescription.from(
+    //        obj.getValue()
+    //          .getClass()
+    //          .getAnnotation(providerAnnotationType)
+    //          .toString());
     List converters =
-      applicationContext.getBeansWithAnnotation(providerAnnotationType).entrySet().stream()
-        .filter(
-          (it) -> {
-            // TODO fix .value()?
-            VersionedDescription converterVersion =
-              VersionedDescription.from(
-                it.getValue()
-                  .getClass()
-                  .getAnnotation(providerAnnotationType)
-                  .toString());
-            return converterVersion.descriptionName == versionedDescription.descriptionName
-              && it.getValue() instanceof AtomicOperationConverter;
-          })
-        .collect(Collectors.toList());
+        applicationContext.getBeansWithAnnotation(providerAnnotationType).entrySet().stream()
+            .filter(
+                (it) -> {
+                  // TODO fix .value()?
+                  VersionedDescription converterVersion =
+                      VersionedDescription.from(
+                          it.getValue()
+                              .getClass()
+                              .getAnnotation(providerAnnotationType)
+                              .toString() // want "deployManifest"
+                          );
+                  return converterVersion.descriptionName.equals(
+                          versionedDescription.descriptionName)
+                      && it.getValue() instanceof AtomicOperationConverter;
+                })
+            .collect(Collectors.toList());
 
     converters =
-      VersionedOperationHelper.findVersionMatches(versionedDescription.version, converters);
+        VersionedOperationHelper.findVersionMatches(versionedDescription.version, converters);
 
     if (converters.isEmpty()) {
       throw new AtomicOperationConverterNotFoundException(
-        "No atomic operation converter found for description '${description}' and cloud provider '${cloudProvider}'. "
-          + "It is possible that either 1) the account name used for the operation is incorrect, or 2) the account name used for the operation is unhealthy/unable to communicate with ${cloudProvider}.");
+          "No atomic operation converter found for description '${description}' and cloud provider '${cloudProvider}'. "
+              + "It is possible that either 1) the account name used for the operation is incorrect, or 2) the account name used for the operation is unhealthy/unable to communicate with ${cloudProvider}.");
     }
     if (converters.size() > 1) {
       throw new RuntimeException(
-        "More than one (${converters.size()}) atomic operation converters found for description '${description}' and cloud provider "
-          + "'${cloudProvider}'");
+          "More than one (${converters.size()}) atomic operation converters found for description '${description}' and cloud provider "
+              + "'${cloudProvider}'");
     }
 
     return (AtomicOperationConverter) converters.get(0);
@@ -87,12 +101,12 @@ public class AnnotationsBasedAtomicOperationsRegistry
 
   @Override
   public DescriptionValidator getAtomicOperationDescriptionValidator(
-    String validator, String cloudProvider) {
+      String validator, String cloudProvider) {
     // Legacy naming convention which is not generic and validator name is specific to cloud
     // provider
     try {
       DescriptionValidator descriptionValidator =
-        super.getAtomicOperationDescriptionValidator(validator, cloudProvider);
+          super.getAtomicOperationDescriptionValidator(validator, cloudProvider);
       if (descriptionValidator != null) {
         return descriptionValidator;
       }
@@ -105,38 +119,40 @@ public class AnnotationsBasedAtomicOperationsRegistry
 
     // is this the Groovy equivalent of findAll?
     List validators =
-      applicationContext.getBeansWithAnnotation(providerAnnotationType).entrySet().stream()
-        .filter(
-          it ->
-            DescriptionValidator.getValidatorName(
-              it.getValue()
-                .getClass()
-                .getAnnotation(providerAnnotationType)
-                .toString())
-              == validator
-              && it.getValue() instanceof DescriptionValidator)
-        .collect(Collectors.toList());
+        applicationContext.getBeansWithAnnotation(providerAnnotationType).entrySet().stream()
+            .filter(
+                it ->
+                    DescriptionValidator.getValidatorName(
+                                it.getValue()
+                                    .getClass()
+                                    .getAnnotation(providerAnnotationType)
+                                    .toString())
+                            .equals(validator)
+                        && it.getValue() instanceof DescriptionValidator)
+            .collect(Collectors.toList());
 
     return !validators.isEmpty() ? (DescriptionValidator) validators.get(0) : null;
   }
 
   protected Class<? extends Annotation> getCloudProviderAnnotation(String cloudProvider)
-    throws CloudProviderNotFoundException {
-    // is this findAll equivalent in Java?
-    // cloudProviders.findAll { it.id == cloudProvider }
+      throws CloudProviderNotFoundException {
     List<CloudProvider> cloudProviderInstances =
-      cloudProviders.stream()
-        .filter(it -> it.getId() == cloudProvider)
-        .collect(Collectors.toList());
-    if (!cloudProviderInstances.isEmpty()) {
-      throw new CloudProviderNotFoundException("No cloud provider named '${cloudProvider}' found");
+        cloudProviders.stream()
+            .filter(it -> it.getId().equals(cloudProvider))
+            .collect(Collectors.toList());
+    if (cloudProviderInstances.isEmpty()) {
+      throw new CloudProviderNotFoundException(
+          "No cloud provider named " + cloudProvider + " found");
     }
     if (cloudProviderInstances.size() > 1) {
       throw new RuntimeException(
-        "More than one (${cloudProviderInstances.size()}) cloud providers found for the identifier '${cloudProvider}'");
+          "More than one ("
+              + cloudProviderInstances.size()
+              + ") cloud providers found for the identifier '"
+              + cloudProvider
+              + "'");
     }
-    cloudProviderInstances.get(0).getOperationAnnotationType();
-    return null;
+    return cloudProviderInstances.get(0).getOperationAnnotationType();
   }
 
   private static class VersionedDescription {
@@ -156,7 +172,7 @@ public class AnnotationsBasedAtomicOperationsRegistry
         List<String> parts = SPLITTER.splitToList(descriptionName);
         if (parts.size() != 2) {
           throw new UserException(
-            "Versioned descriptions must follow '{description}@{version}' format");
+              "Versioned descriptions must follow '{description}@{version}' format");
         }
 
         return new VersionedDescription(parts.get(0), parts.get(1));
