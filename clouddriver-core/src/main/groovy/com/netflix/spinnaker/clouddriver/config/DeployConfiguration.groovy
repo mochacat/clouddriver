@@ -47,7 +47,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ComponentScan("com.netflix.spinnaker.clouddriver.orchestration.sagas")
+@ComponentScan(["com.netflix.spinnaker.clouddriver.orchestration.sagas","com.netflix.spinnaker.clouddriver.orchestration"])
 class DeployConfiguration {
   @Bean
   @ConditionalOnMissingBean(TaskRepository)
