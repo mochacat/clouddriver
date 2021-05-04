@@ -16,7 +16,7 @@
 
 package com.netflix.spinnaker.clouddriver.controllers
 
-import com.netflix.spinnaker.clouddriver.exceptions.CloudProviderNotFoundException
+import com.netflix.spinnaker.clouddriver.orchestration.CloudProviderNotFoundException
 import com.netflix.spinnaker.clouddriver.model.LoadBalancer
 import com.netflix.spinnaker.clouddriver.model.LoadBalancerProvider
 import org.springframework.beans.factory.annotation.Autowired
