@@ -17,6 +17,7 @@
 package com.netflix.spinnaker.clouddriver.orchestration
 
 import com.netflix.spinnaker.clouddriver.core.CloudProvider
+import com.netflix.spinnaker.clouddriver.deploy.AtomicOperationsRegistry
 import com.netflix.spinnaker.clouddriver.deploy.DescriptionValidator
 import com.netflix.spinnaker.clouddriver.deploy.ValidationErrors
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
