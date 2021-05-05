@@ -16,6 +16,7 @@
 
 package com.netflix.spinnaker.clouddriver.orchestration
 
+import com.netflix.spinnaker.clouddriver.deploy.AtomicOperationsRegistry
 import com.netflix.spinnaker.clouddriver.deploy.DescriptionValidator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext

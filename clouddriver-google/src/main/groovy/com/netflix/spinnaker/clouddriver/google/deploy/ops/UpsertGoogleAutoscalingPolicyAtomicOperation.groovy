@@ -33,7 +33,7 @@ import com.netflix.spinnaker.clouddriver.google.model.callbacks.Utils
 import com.netflix.spinnaker.clouddriver.google.provider.view.GoogleClusterProvider
 import com.netflix.spinnaker.clouddriver.google.security.GoogleNamedAccountCredentials
 import com.netflix.spinnaker.clouddriver.orchestration.AtomicOperation
-import com.netflix.spinnaker.clouddriver.orchestration.AtomicOperationsRegistry
+import com.netflix.spinnaker.clouddriver.deploy.AtomicOperationsRegistry
 import com.netflix.spinnaker.clouddriver.orchestration.OrchestrationProcessor
 import org.springframework.beans.factory.annotation.Autowired
 

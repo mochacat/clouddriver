@@ -20,6 +20,7 @@ import com.google.common.base.Splitter;
 import com.netflix.spectator.api.Id;
 import com.netflix.spectator.api.Registry;
 import com.netflix.spinnaker.clouddriver.data.task.SagaId;
+import com.netflix.spinnaker.clouddriver.deploy.AtomicOperationsRegistry;
 import com.netflix.spinnaker.clouddriver.deploy.DescriptionAuthorizer;
 import com.netflix.spinnaker.clouddriver.deploy.DescriptionValidationErrors;
 import com.netflix.spinnaker.clouddriver.deploy.DescriptionValidationException;

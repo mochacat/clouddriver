@@ -30,7 +30,7 @@ import com.netflix.spinnaker.clouddriver.google.provider.view.GoogleSubnetProvid
 import com.netflix.spinnaker.clouddriver.google.security.GoogleNamedAccountCredentials;
 import com.netflix.spinnaker.clouddriver.orchestration.AtomicOperation;
 import com.netflix.spinnaker.clouddriver.orchestration.AtomicOperationConverter;
-import com.netflix.spinnaker.clouddriver.orchestration.AtomicOperationsRegistry;
+import com.netflix.spinnaker.clouddriver.deploy.AtomicOperationsRegistry;
 import com.netflix.spinnaker.clouddriver.orchestration.OrchestrationProcessor;
 import groovy.lang.Closure;
 import java.io.IOException;

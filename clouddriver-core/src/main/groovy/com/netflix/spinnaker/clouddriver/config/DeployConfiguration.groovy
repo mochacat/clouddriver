@@ -23,12 +23,11 @@ import com.netflix.spinnaker.clouddriver.data.task.TaskRepository
 import com.netflix.spinnaker.clouddriver.deploy.DefaultDeployHandlerRegistry
 import com.netflix.spinnaker.clouddriver.deploy.DeployHandler
 import com.netflix.spinnaker.clouddriver.deploy.DeployHandlerRegistry
-import com.netflix.spinnaker.clouddriver.deploy.DefaultDescriptionAuthorizer
 import com.netflix.spinnaker.clouddriver.deploy.DescriptionAuthorizer
 import com.netflix.spinnaker.clouddriver.deploy.NullOpDeployHandler
 import com.netflix.spinnaker.clouddriver.orchestration.AnnotationsBasedAtomicOperationsRegistry
 import com.netflix.spinnaker.clouddriver.orchestration.AtomicOperationDescriptionPreProcessor
-import com.netflix.spinnaker.clouddriver.orchestration.AtomicOperationsRegistry
+import com.netflix.spinnaker.clouddriver.deploy.AtomicOperationsRegistry
 import com.netflix.spinnaker.clouddriver.orchestration.DefaultOrchestrationProcessor
 import com.netflix.spinnaker.clouddriver.orchestration.ExceptionClassifier
 import com.netflix.spinnaker.clouddriver.orchestration.OperationsService
